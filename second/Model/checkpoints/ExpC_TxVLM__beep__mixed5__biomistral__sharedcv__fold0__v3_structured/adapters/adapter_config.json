@@ -1,0 +1,41 @@
+{
+    "adapter_path": "/Users/ckk/RAG/Second_Recur/Model/checkpoints/ExpC_TxVLM__beep__mixed5__biomistral__sharedcv__fold0__v3_structured/adapters",
+    "batch_size": 4,
+    "config": "/Users/ckk/RAG/Second_Recur/Model/checkpoints/ExpC_TxVLM__beep__mixed5__biomistral__sharedcv__fold0__v3_structured/lora_config.yaml",
+    "data": "/Users/ckk/RAG/Second_Recur/Model/checkpoints/ExpC_TxVLM__beep__mixed5__biomistral__sharedcv__fold0__v3_structured",
+    "fine_tune_type": "lora",
+    "grad_accumulation_steps": 1,
+    "grad_checkpoint": true,
+    "iters": 200,
+    "learning_rate": 2e-05,
+    "lora_parameters": {
+        "alpha": 16,
+        "dropout": 0.05,
+        "rank": 16,
+        "scale": 1.0
+    },
+    "lr_schedule": null,
+    "mask_prompt": true,
+    "max_seq_length": 3072,
+    "model": "/Users/ckk/RAG/Second_Recur/Model/local_models/BioMistral-7B-DARE-4bit",
+    "num_layers": 16,
+    "optimizer": "adam",
+    "optimizer_config": {
+        "adam": {},
+        "adamw": {},
+        "muon": {},
+        "sgd": {},
+        "adafactor": {}
+    },
+    "project_name": null,
+    "report_to": null,
+    "resume_adapter_file": null,
+    "save_every": 50,
+    "seed": 0,
+    "steps_per_eval": 200,
+    "steps_per_report": 10,
+    "test": false,
+    "test_batches": 500,
+    "train": true,
+    "val_batches": -1
+}

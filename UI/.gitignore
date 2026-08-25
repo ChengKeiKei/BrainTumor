@@ -1,0 +1,12 @@
+# OS / Python noise
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Rebuilt automatically on first run (TF-IDF over data/ corpus)
+cache/
+
+# Streamlit secrets
+.streamlit/secrets.toml

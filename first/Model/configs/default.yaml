@@ -1,0 +1,39 @@
+# First_Recur/Model/configs/default.yaml
+# Default hyperparameters for LoRA fine-tuning Mistral-7B-Instruct-v0.3
+# on the brain-tumor 1st-progression task. Loaded by code/run_grid.py.
+
+model:
+  base_id:        "mlx-community/Mistral-7B-Instruct-v0.3-4bit"  # pre-quantised MLX
+  max_seq_length: 2048
+  load_in_4bit:   true                 # redundant (repo is already 4-bit MLX)
+
+lora:
+  rank:           16
+  alpha:          16
+  dropout:        0.05
+  bias:           "none"
+  target_modules: ["q_proj","k_proj","v_proj","o_proj",
+                   "gate_proj","up_proj","down_proj"]
+
+train:
+  steps:          250                  # matches P1 *_step250_strict checkpoints
+  batch_size:     4
+  lr:             2.0e-5
+  warmup_steps:   100
+  lr_scheduler:   "cosine"
+  save_steps:     250
+  eval_steps:     50
+  logging_steps:  10
+  mask_prompt:    true                 # only computes loss on Yes/No response
+  grad_checkpoint: true
+
+retrieval:
+  top_k_sparse:        10
+  top_k_dense:         10
+  final_top_k:         3      # BEEP default (3 reranked PubMed abstracts per patient)
+  abstract_max_chars:  2000   # covers full abstract for ~93% of the 10K corpus
+                              # (median 1 590, p95 2 330); set to 0 to disable trunc
+
+eval:
+  threshold:      0.5
+  bootstrap:      1000

@@ -1,0 +1,79 @@
+# Operating-system and Python noise
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Private/raw/processed datasets and generated split files
+dataset/**/Raw/
+dataset/**/Processed/
+dataset/**/splits/
+dataset/**/splits_cv/
+PPUM/input/
+PPUM/generated/
+
+# Retrieval corpora, indexes, and downloaded checkpoints
+database/Retrieval/corpus/
+database/Retrieval/biencoder/
+database/Retrieval/indexes/
+database/BEEP/
+
+# Training, inference, tuning, and evaluation products
+first/Model/prompts/
+first/Model/checkpoints/*
+!first/Model/checkpoints/Exp3__beep__medcpt__biomistral/
+first/Model/results/
+first/Imbalance/embeddings/
+first/Imbalance/oof_predictions/
+first/Imbalance/results/
+second/Model/prompts/
+second/Model/checkpoints/*
+!second/Model/checkpoints/ExpC_TxVLM__beep__mixed5__biomistral__sharedcv__fold0__v3_structured/
+second/Model/results/
+second/Model/local_models/
+second/VLM/RadFM_repo/
+second/VLM/RadFM_weights/
+second/VLM/eval_radfm/
+second/VLM/logs/
+second/Evaluation/generated/
+
+# UI runtime artifacts
+UI/models/*
+!UI/models/first_recur_hybrid_biomistral_last_exp3_medcpt.joblib
+UI/cache/
+UI/data/*
+# Public PubMed abstracts needed by the deployed demo's literature retrieval
+!UI/data/pubmed_brain_tumor_recurrence_10000_complete_title_abstract.jsonl
+
+# Common generated artifact formats
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.jsonl
+*.log
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.pdf
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.faiss
+*.npy
+*.npz
+*.pkl
+*.joblib
+*.db
+*.sqlite
+
+# Re-include the shipped best-model checkpoints (exceptions to formats above)
+!first/Model/checkpoints/Exp3__beep__medcpt__biomistral/**
+!second/Model/checkpoints/ExpC_TxVLM__beep__mixed5__biomistral__sharedcv__fold0__v3_structured/**
+!UI/models/first_recur_hybrid_biomistral_last_exp3_medcpt.joblib
+!UI/data/pubmed_brain_tumor_recurrence_10000_complete_title_abstract.jsonl

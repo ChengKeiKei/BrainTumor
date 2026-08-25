@@ -1,0 +1,19 @@
+# First_Recur/Model/configs/grid.yaml
+# Explicit list of (experiment, retriever, reranker) cells.
+# Loaded by code/run_grid.py.
+#
+# 4 experiments × { baseline, beep_dense×{beep|minilm|medcpt|colbert|bge_m3} }
+# = 4 × (1 + 5) = 24 configurations.
+
+experiments: [Exp1, Exp2, Exp3, Exp4]
+
+cells:
+  # --- baseline (no RAG) ---------------------------------------------------
+  - {retriever: none,  reranker: none}
+
+  # --- BEEP-faithful retriever × every reranker ---------------------------
+  - {retriever: beep,  reranker: beep}        # paper-faithful, primary
+  - {retriever: beep,  reranker: minilm}
+  - {retriever: beep,  reranker: medcpt}
+  - {retriever: beep,  reranker: colbert}
+  - {retriever: beep,  reranker: bge_m3}

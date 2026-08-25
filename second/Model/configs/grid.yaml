@@ -1,0 +1,38 @@
+# Second_Recur/Model/configs/grid.yaml
+# =====================================
+# Reranker comparison grid for the Second Progression task.
+#
+# This grid REPLACES the earlier 16-cell run (Exp1-4 × {baseline, BEEP-BEEP}
+# × {biomistral, mistral}). Three things changed at the user's direction:
+#
+#   1. The original Exp1 (Demographics + Diagnosis + Molecular only)
+#      duplicated First_Recur Exp2 on a smaller, harder cohort and was
+#      dropped. The Second_Recur ablation now centres on the dynamic
+#      features (Salvage Treatment, MRI follow-up timepoints, Radiomic /
+#      VLM imaging summaries). Demographics + Diagnosis + Molecular
+#      remain as patient-anchor base blocks in every experiment.
+#
+#   2. We rename the remaining experiments so they don't collide with the
+#      dropped indices:
+#          ExpA_Tx           = Demo + Diag + Mol + InitialTx + SalvageTx
+#          ExpB_TxRadiomic   = ExpA + Timepoints + Radiomic features
+#          ExpC_TxVLM        = ExpA + Timepoints + RadFM imaging captions
+#
+#   3. The 16-cell run showed BioMistral > Mistral consistently, so this
+#      grid uses BioMistral only. The Mistral A/B will be re-run on the
+#      final winning cell once the reranker comparison is settled.
+#
+# Cells: 3 experiments × 5 rerankers × 1 LLM = 15 cells.
+# All cells use the BEEP retriever (PubMedBERT-CE biencoder, the paper-
+# faithful pipeline). Only the reranker varies, mirroring First_Recur's
+# reranker ablation so we get a like-for-like comparison.
+experiments: [ExpA_Tx, ExpB_TxRadiomic, ExpC_TxVLM]
+models:      [biomistral]
+
+cells:
+  # BEEP retriever × every reranker (5 cells per experiment).
+  - {retriever: beep,  reranker: beep}     # paper-faithful, primary
+  - {retriever: beep,  reranker: minilm}
+  - {retriever: beep,  reranker: medcpt}
+  - {retriever: beep,  reranker: colbert}
+  - {retriever: beep,  reranker: bge_m3}

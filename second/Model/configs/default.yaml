@@ -1,0 +1,42 @@
+# Second_Recur/Model/configs/default.yaml
+# Default hyperparameters for LoRA fine-tuning on the brain-tumor
+# 2nd-progression task.  Loaded by code/run_grid.py.
+
+model:
+  # Default base model for this task.  Overridden per-cell in grid.yaml via
+  # the `models:` key. Aliases supported by run_grid.MODEL_ALIAS:
+  #   biomistral → BioMistral-7B-DARE-4bit (PMC-pretrained, MLX 4-bit)
+  #   mistral    → mlx-community/Mistral-7B-Instruct-v0.3-4bit
+  default_alias: "biomistral"
+  max_seq_length: 2048
+  load_in_4bit:   true                 # already 4-bit MLX
+
+lora:
+  rank:           16
+  alpha:          16
+  dropout:        0.05
+  bias:           "none"
+  target_modules: ["q_proj","k_proj","v_proj","o_proj",
+                   "gate_proj","up_proj","down_proj"]
+
+train:
+  steps:          250                  # matches First_Recur for direct comparability
+  batch_size:     4
+  lr:             2.0e-5
+  warmup_steps:   100
+  lr_scheduler:   "cosine"
+  save_steps:     250
+  eval_steps:     50
+  logging_steps:  10
+  mask_prompt:    true
+  grad_checkpoint: true
+
+retrieval:
+  top_k_sparse:        10
+  top_k_dense:         10
+  final_top_k:         3      # BEEP default
+  abstract_max_chars:  2000
+
+eval:
+  threshold:      0.5
+  bootstrap:      1000

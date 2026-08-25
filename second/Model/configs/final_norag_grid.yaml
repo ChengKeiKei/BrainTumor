@@ -1,0 +1,11 @@
+# Locked no-RAG grid for the final Second-Recurrence comparison.
+# Every cell uses the same Mistral backbone and differs only by feature level.
+experiments:
+  - ExpA_TxNoMol
+  - ExpA_Tx
+  - ExpB_TxRadiomic
+  - ExpC_TxVLM
+  - ExpD_TxRadVLM
+models: [mistral]
+cells:
+  - {retriever: none, reranker: none}

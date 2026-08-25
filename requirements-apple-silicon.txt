@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# LoRA training/inference code in first/Model and second/Model uses Apple MLX.
+mlx>=0.19
+mlx-lm>=0.19

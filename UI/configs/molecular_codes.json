@@ -1,0 +1,16 @@
+{
+  "_source": "MU-Glioma-Post Data Dictionary (July 2025), sheet 'Data Dictionary'. Used by feature_render.py to convert numeric molecular codes into human-readable strings before they enter the LLM prompt.",
+  "IDH1 mutation":                            {"0": "IDH1 wildtype", "1": "IDH1 mutated", "2": "IDH1 unknown"},
+  "IDH2 mutation":                            {"0": "IDH2 wildtype", "1": "IDH2 mutated", "2": "IDH2 unknown"},
+  "1p/19q":                                    {"0": "no 1p/19q codeletion", "1": "1p/19q codeletion", "2": "19q deletion", "3": "19q duplication or trisomy", "4": "19q duplication", "5": "gain of 19", "6": "1p deletion", "7": "tetraploid", "8": "19q trisomy", "9": "abnormal karyotype", "10": "1p/19q unknown"},
+  "ATRX mutation":                            {"0": "ATRX wildtype", "1": "ATRX mutated", "2": "ATRX mosaic", "3": "ATRX possible mosaicism", "4": "ATRX unknown"},
+  "MGMT methylation":                         {"0": "MGMT unmethylated", "1": "MGMT methylated", "2": "MGMT indeterminate", "3": "MGMT unable to assess", "4": "MGMT unknown"},
+  "BRAF V600E mutation":                      {"0": "BRAF V600E wildtype", "1": "BRAF V600E mutated", "2": "BRAF V600E unknown"},
+  "TERT promoter mutation":                   {"0": "TERT promoter wildtype", "1": "TERT promoter mutated", "2": "TERT promoter unknown"},
+  "Chromosome 7 gain and Chromosome 10 loss": {"0": "no +7/-10", "1": "+7/-10 present", "2": "+7/-10 unknown"},
+  "H3-3A mutation":                           {"0": "H3-3A wildtype", "1": "H3-3A mutated", "2": "H3-3A unknown"},
+  "EGFR amplification":                       {"0": "no EGFR amplification", "1": "EGFR amplified", "2": "EGFR amplification unknown"},
+  "PTEN mutation":                            {"0": "PTEN wildtype", "1": "PTEN mutated"},
+  "CDKN2A/B deletion":                        {"0": "no CDKN2A/B deletion", "1": "CDKN2A/B deleted"},
+  "TP53 alteration":                          {"0": "TP53 unaltered", "1": "TP53 altered"}
+}
