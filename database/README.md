@@ -29,7 +29,7 @@ their Hugging Face model repositories when selected.
 
 ## Build indexes
 
-From the `24083155` root:
+From the `BrainTumor` root:
 
 ```bash
 python database/Retrieval/code/sparse_retrieval.py

@@ -26,7 +26,7 @@ from typing import Iterable
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]            # 24083155/first/
+ROOT = Path(__file__).resolve().parents[2]            # BrainTumor/first/
 DATASET_DIR = ROOT.parent / "dataset" / "first"
 SPLITS_DIR = DATASET_DIR / "splits"
 GROUPS_PATH = DATASET_DIR / "Processed" / "feature_groups.json"

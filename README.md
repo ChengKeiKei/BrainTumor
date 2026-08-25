@@ -1,4 +1,4 @@
-# FYP code handoff — 24083155
+# BrainTumor — FYP code handoff (24083155)
 
 This is the clean, code-only handoff for the glioma recurrence research
 pipeline. The original `First_Recur` and `Second_Recur` folders were audited;
@@ -34,7 +34,7 @@ must be downloaded/placed locally as described in the model READMEs.
 ## Folder map
 
 ```text
-24083155/
+BrainTumor/
 ├── dataset/   preprocessing notebooks and leakage/landmark code
 ├── first/     first-recurrence RAG, LoRA, evaluation, and hybrid XGBoost
 ├── second/    second-recurrence multimodal, CV, baseline, and VLM code
@@ -63,7 +63,7 @@ require an Apple-silicon Mac. Dataset preprocessing, conventional baselines,
 and most retrieval code can run on Linux or macOS.
 
 ```bash
-cd 24083155
+cd BrainTumor
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip

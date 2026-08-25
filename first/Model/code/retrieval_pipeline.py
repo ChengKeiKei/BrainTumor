@@ -33,7 +33,7 @@ import numpy as np
 import torch
 import faiss
 
-ROOT = Path(__file__).resolve().parents[2]                # 24083155/first/
+ROOT = Path(__file__).resolve().parents[2]                # BrainTumor/first/
 DATABASE_DIR = ROOT.parent / "database"
 RETRIEVAL_DIR = DATABASE_DIR / "Retrieval"
 RERANKER_CODE = DATABASE_DIR / "Reranker" / "code"

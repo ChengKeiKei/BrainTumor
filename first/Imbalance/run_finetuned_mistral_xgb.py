@@ -25,7 +25,7 @@ that mode should be labelled as optimistic/stacking-leakage-prone and should
 not be used as the main submission result.
 
 Usage:
-    cd 24083155
+    cd BrainTumor
 
     # Safe mode, requires OOF train scores:
     python Imbalance/run_finetuned_mistral_xgb.py --cell-tag Exp4__beep__beep

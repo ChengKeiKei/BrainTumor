@@ -7,13 +7,13 @@ Doctor-facing Streamlit demo for the first/second recurrence workflows.
 This UI now lives under the handoff tree:
 
 ```text
-24083155/UI/
+BrainTumor/UI/
 ```
 
 ## Run
 
 ```bash
-cd "/Users/ckk/RAG/24083155/UI"
+cd "/Users/ckk/RAG/BrainTumor/UI"
 python -m pip install -r requirements.txt
 python tests/test_xai_stress.py
 streamlit run app.py

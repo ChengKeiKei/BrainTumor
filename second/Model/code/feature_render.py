@@ -47,7 +47,7 @@ from typing import Iterable
 
 import pandas as pd
 
-ROOT        = Path(__file__).resolve().parents[2]            # 24083155/second/
+ROOT        = Path(__file__).resolve().parents[2]            # BrainTumor/second/
 DATASET_DIR = ROOT.parent / "dataset" / "second"
 SPLITS_DIR  = DATASET_DIR / "splits"
 PROCESSED_D = DATASET_DIR / "Processed"

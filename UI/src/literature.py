@@ -20,7 +20,7 @@ RAG_ROOT = UI_ROOT.parent.parent
 DEFAULT_CORPUS_CANDIDATES = [
     UI_ROOT / "data" / "pubmed_brain_tumor_recurrence_10000_complete_title_abstract.jsonl",
     RAG_ROOT / "Brain_KG" / "data" / "pubmed" / "pubmed_brain_tumor_recurrence_10000_complete_title_abstract.jsonl",
-    RAG_ROOT / "24083155" / "database" / "Retrieval" / "corpus" / "pubmed_brain_tumor_recurrence_10000_complete_title_abstract.jsonl",
+    RAG_ROOT / "BrainTumor" / "database" / "Retrieval" / "corpus" / "pubmed_brain_tumor_recurrence_10000_complete_title_abstract.jsonl",
 ]
 CACHE_DIR = UI_ROOT / "cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
