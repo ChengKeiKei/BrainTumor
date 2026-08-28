@@ -59,12 +59,16 @@ SR_FIVEFOLD_METRICS = {
 
 
 def resolve_fr_training_emb_dir() -> Path:
+    """Best-effort path to the MU training embeddings.
+
+    These only exist on the training machine and are needed solely to
+    (re)build the hybrid artifact. Deployed installs run from the shipped
+    .joblib, so never raise here — callers that actually need the files
+    check .exists() themselves.
+    """
     if FR_TRAINING_EMB_DIR.exists():
         return FR_TRAINING_EMB_DIR
     fallback = FR_ROOT / "Imbalance" / "embeddings" / FR_ENCODER_SLUG / FR_POOLING / FR_CELL_TAG
     if fallback.exists():
         return fallback
-    raise FileNotFoundError(
-        f"Missing First Recurrence embeddings. Expected legacy last-token dir "
-        f"{FR_TRAINING_EMB_DIR} (preferred) or {fallback}."
-    )
+    return FR_TRAINING_EMB_DIR
