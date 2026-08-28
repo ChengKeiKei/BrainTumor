@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import altair as alt
@@ -46,11 +46,68 @@ from src.ui_components import (
     render_fields,
     render_interactive_counterfactual,
     render_prediction,
+    render_required_progress,
     validate_required_inputs,
 )
 
 
 ROOT = Path(__file__).resolve().parent
+
+# Widget-key presets for the one-click demo patients. Date widgets use the
+# "_cal" suffix; select values must match the Field options exactly.
+EXAMPLE_FR_PATIENT: dict[str, object] = {
+    "patient_id": "DEMO-GBM-01",
+    "diagnosis_date_cal": date(2024, 1, 10),
+    "age": 62,
+    "sex": "Male",
+    "race": "Malay",
+    "primary_diagnosis": "Glioblastoma",
+    "grade": "4",
+    "biopsy_before_resection": "No",
+    "previous_brain_tumor": "No",
+    "first_surgery_day_cal": date(2024, 1, 15),
+    "initial_chemo": "Yes",
+    "initial_chemo_name": "Temozolomide",
+    "initial_chemo_start_day_cal": date(2024, 2, 20),
+    "initial_chemo_end_day_cal": date(2024, 8, 20),
+    "radiotherapy": "Yes",
+    "rt_start_day_cal": date(2024, 2, 20),
+    "rt_end_day_cal": date(2024, 4, 5),
+    "rt_dose": 60,
+    "rt_fractions": 30,
+    "idh1": "Wildtype / negative",
+    "mgmt": "Unmethylated",
+}
+
+EXAMPLE_SR_PATIENT: dict[str, object] = {
+    "patient_id": "DEMO-SR-01",
+    "diagnosis_date_cal": date(2023, 6, 1),
+    "age": 58,
+    "sex": "Female",
+    "primary_diagnosis": "Glioblastoma",
+    "grade": "4",
+    "time_to_first_progression_cal": date(2024, 4, 15),
+    "type_first_progression": "Local",
+    "multiple_surgeries": "No",
+    "additional_therapy": "Yes",
+    "additional_therapy_start_cal": date(2024, 5, 1),
+    "additional_therapy_end_cal": date(2024, 8, 1),
+    "additional_cycles": 4,
+    "immunotherapy": "No",
+    "latest_mri_day_cal": date(2024, 9, 10),
+    "mri_report": (
+        "Interval increase in enhancing lesion along the resection cavity margin with new "
+        "nodular enhancement and increased surrounding FLAIR edema, suspicious for progression."
+    ),
+    "idh1": "Wildtype / negative",
+    "mgmt": "Unmethylated",
+}
+
+
+def load_example_patient(namespace: str, values: dict[str, object]) -> None:
+    """Must be called before the field widgets are instantiated in this rerun."""
+    for key, value in values.items():
+        st.session_state[f"{namespace}_{key}"] = value
 
 
 @st.cache_resource(show_spinner=False)
@@ -142,8 +199,19 @@ def render_first_recurrence_tab() -> None:
             "10k corpus with TF-IDF so the UI can run without loading reranker weights."
         )
         st.dataframe(checkpoint_status(), use_container_width=True, hide_index=True)
+    ex_col, ex_note = st.columns([1, 3])
+    with ex_col:
+        if st.button("Load example patient", key="fr_load_example"):
+            load_example_patient("fr", EXAMPLE_FR_PATIENT)
+    with ex_note:
+        st.caption(
+            "Fills the form with a typical newly diagnosed GBM case (62-year-old, TMZ + radiotherapy) "
+            "so you can see a full prediction in one click. You can edit any value afterwards."
+        )
+
     data, _required_labels = render_fields(FIRST_RECURRENCE_FIELDS, "fr")
 
+    render_required_progress(data, FIRST_RECURRENCE_FIELDS)
     if st.button("Predict First Recurrence risk", type="primary", key="predict_fr"):
         missing, unknown = validate_required_inputs(data, FIRST_RECURRENCE_FIELDS)
         if missing:
@@ -242,6 +310,11 @@ def render_first_recurrence_tab() -> None:
     st.caption(
         f"Result for patient **{result_pid}**, generated {result.get('created_at', 'earlier')}. "
         "If you change any input above, click Predict again to refresh this result."
+    )
+    st.caption(
+        "This percentage is the model's raw score, **not a clinically calibrated probability**. "
+        "Use it to compare and rank patients or what-if scenarios (see the counterfactual analysis below), "
+        "not as the absolute chance of recurrence."
     )
 
     st.markdown("#### XAI: SHAP-style feature contributions")
@@ -380,10 +453,21 @@ def render_second_recurrence_tab() -> None:
         )
         st.dataframe(checkpoint_status(), use_container_width=True, hide_index=True)
 
+    ex_col, ex_note = st.columns([1, 3])
+    with ex_col:
+        if st.button("Load example patient", key="sr_load_example"):
+            load_example_patient("sr", EXAMPLE_SR_PATIENT)
+    with ex_note:
+        st.caption(
+            "Fills the form with a typical post-first-recurrence GBM case (local progression, "
+            "salvage therapy, progressing MRI) so you can see a full prediction in one click."
+        )
+
     # Handle imaging separately so upload → caption can populate the report field.
     data, required_labels = render_fields(SECOND_RECURRENCE_FIELDS, "sr", skip_keys={"mri_report"})
     data["mri_report"] = _render_second_imaging_section(data)
 
+    render_required_progress(data, SECOND_RECURRENCE_FIELDS)
     if st.button("Predict Second Recurrence risk", type="primary", key="predict_sr"):
         missing, unknown = validate_required_inputs(data, SECOND_RECURRENCE_FIELDS)
         if missing:

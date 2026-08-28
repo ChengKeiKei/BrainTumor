@@ -90,6 +90,11 @@ DIAGNOSIS_OPTIONS = (
 )
 
 
+# The Exp3 hybrid XGBoost does not consume molecular columns; say so in the
+# section title itself so doctors know before they fill anything in.
+FR_MOLECULAR_GROUP = "Optional molecular record (for case notes only — NOT used by this model's prediction)"
+
+
 FIRST_RECURRENCE_FIELDS: tuple[Field, ...] = (
     Field("patient_id", "Patient ID / RN", "text", "Patient information", True),
     Field(
@@ -210,18 +215,18 @@ FIRST_RECURRENCE_FIELDS: tuple[Field, ...] = (
         "idh1",
         "IDH1 mutation",
         "select",
-        "Optional molecular features",
+        FR_MOLECULAR_GROUP,
         False,
         MUTATION_OPTIONS,
         help_text="Not used by the Exp3 hybrid XGBoost. Kept for case records only.",
     ),
-    Field("idh2", "IDH2 mutation", "select", "Optional molecular features", False, MUTATION_OPTIONS),
-    Field("codeletion_1p19q", "1p/19q codeletion", "select", "Optional molecular features", False, MUTATION_OPTIONS),
-    Field("mgmt", "MGMT methylation", "select", "Optional molecular features", False, METHYLATION_OPTIONS),
-    Field("atrx", "ATRX mutation/loss", "select", "Optional molecular features", False, MUTATION_OPTIONS),
-    Field("tert", "TERT promoter mutation", "select", "Optional molecular features", False, MUTATION_OPTIONS),
-    Field("egfr", "EGFR amplification", "select", "Optional molecular features", False, MUTATION_OPTIONS),
-    Field("other_molecular", "Other mutations / alterations", "textarea", "Optional molecular features"),
+    Field("idh2", "IDH2 mutation", "select", FR_MOLECULAR_GROUP, False, MUTATION_OPTIONS),
+    Field("codeletion_1p19q", "1p/19q codeletion", "select", FR_MOLECULAR_GROUP, False, MUTATION_OPTIONS),
+    Field("mgmt", "MGMT methylation", "select", FR_MOLECULAR_GROUP, False, METHYLATION_OPTIONS),
+    Field("atrx", "ATRX mutation/loss", "select", FR_MOLECULAR_GROUP, False, MUTATION_OPTIONS),
+    Field("tert", "TERT promoter mutation", "select", FR_MOLECULAR_GROUP, False, MUTATION_OPTIONS),
+    Field("egfr", "EGFR amplification", "select", FR_MOLECULAR_GROUP, False, MUTATION_OPTIONS),
+    Field("other_molecular", "Other mutations / alterations", "textarea", FR_MOLECULAR_GROUP),
 )
 
 

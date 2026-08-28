@@ -109,6 +109,10 @@ def render_prediction(prediction: Prediction, *, show_rule_xai: bool = False) ->
         """,
         unsafe_allow_html=True,
     )
+    st.caption(
+        "This percentage is the model's raw score, **not a clinically calibrated probability**. "
+        "Use it to compare and rank patients or what-if scenarios, not as the absolute chance of recurrence."
+    )
     if prediction.warning:
         st.warning(prediction.warning)
     if prediction.checkpoint_paths:
@@ -425,6 +429,36 @@ def render_fields(
                             field.display_label, key=widget_key, help=field.help_text or None
                         )
     return apply_date_offsets(values), required_labels
+
+
+def render_required_progress(data: dict[str, Any], fields: tuple[Field, ...]) -> None:
+    """Progress bar next to the Predict button: how many required fields are done.
+
+    'Unknown' select answers count as answered (the model handles them as
+    missing data) but are surfaced separately so the doctor can double-check.
+    """
+    total = 0
+    hard_missing = 0
+    unknown = 0
+    for field in fields:
+        if not field.required:
+            continue
+        if field.depends_on is not None:
+            dep_key, dep_value = field.depends_on
+            if data.get(dep_key) != dep_value:
+                continue
+        total += 1
+        value = data.get(field.key)
+        if field.field_type == "select":
+            if value is None or str(value).strip().lower().startswith("unknown"):
+                unknown += 1
+        elif value is None or (isinstance(value, str) and not value.strip()):
+            hard_missing += 1
+    filled = total - hard_missing
+    text = f"Required fields: {filled} of {total} filled"
+    if unknown:
+        text += f" · {unknown} answered 'Unknown' (allowed, treated as missing data)"
+    st.progress(filled / total if total else 1.0, text=text)
 
 
 def validate_required_inputs(
