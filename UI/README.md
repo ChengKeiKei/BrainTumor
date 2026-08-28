@@ -114,6 +114,6 @@ Live LLM scoring is **off by default** so Streamlit does not download weights.
 
 ## XAI
 
-- **First Recurrence:** SHAP-style XGBoost `pred_contribs` **and** counterfactual what-if flips. Molecular flips do not change the Exp3 hybrid score.
-- **Second Recurrence:** counterfactual only (no SHAP), matching the LoRA-first path without a hybrid feature matrix.
-- **Second Recurrence imaging:** upload MRI → optional RadFM caption (when `second/VLM/RadFM_weights` exists) → editable report text used by scoring/counterfactuals.
+- **First Recurrence:** SHAP-style XGBoost `pred_contribs` only. The what-if table was removed because Exp3 does not use molecular columns, most clinical splits are unused, and smoke-mode embeddings are frozen — so nearly every flip showed 0.00.
+- **Second Recurrence:** no SHAP and no what-if table (LoRA-first path has no hybrid feature matrix).
+- **Second Recurrence imaging:** upload MRI → optional RadFM caption (when `second/VLM/RadFM_weights` exists) → editable report text used by scoring.

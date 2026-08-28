@@ -87,7 +87,7 @@ def predict_second(
         probability=probability,
         risk_level=_risk_level(probability),
         evidence_completeness=_confidence(missing_required, optional_missing),
-        drivers=["Live BioMistral LoRA Yes/No probability; XAI is counterfactual-only"],
+        drivers=["Live BioMistral LoRA Yes/No probability"],
         contributions=[],
         missing_required=missing_required,
         evidence_prompt=prompt,

@@ -386,7 +386,7 @@ def render_second_recurrence_tab() -> None:
         st.warning(
             "**Demo mode.** The trained Second Recurrence model (BioMistral-7B LoRA, "
             "five-fold AUROC 0.720) is too large for this free server, so this tab uses a "
-            "rule-based scorer to demonstrate the full workflow, inputs, and explainability. "
+            "rule-based scorer to demonstrate the full workflow and inputs. "
             "Run the app locally with the model weights to get real LoRA predictions."
         )
     guide_box("Input checklist for accurate Second Recurrence prediction", SECOND_RECURRENCE_GUIDE)

@@ -320,12 +320,10 @@ event into days after diagnosis for the model.
 8. Click **Run prediction**.
 
 The UI then shows the risk probability, a short clinical interpretation,
-and explainability:
-
-- **First Recurrence:** SHAP-style feature contributions plus a
-  counterfactual what-if table (and an interactive “Try your own” panel).
-- **Second Recurrence:** counterfactual what-if only (no SHAP). Green
-  means the change lowered predicted risk; red means it raised it.
+and (for First Recurrence) SHAP-style feature contributions. The
+counterfactual what-if table was removed: under the deployed Exp3 hybrid
+and smoke-mode embeddings, almost every flip was 0.00 and was more
+confusing than useful for doctors.
 
 ### Example A — First Recurrence, typical GBM
 
@@ -375,7 +373,7 @@ Keep the same diagnosis date `2023-01-15`, then change:
 | MGMT | Methylated |
 | First recurrence date | leave empty (or a much later date) |
 
-Run again and compare the probability and the counterfactual table with
+Run again and compare the probability and the SHAP contribution chart with
 Example A. Age, histology, grade, and treatment timing are the fields
 that can move the Exp3 hybrid score.
 
@@ -396,9 +394,8 @@ that can move the Exp3 hybrid score.
 
 After upload, edit the imaging report if needed (for example add
 “progressive enhancing mass” or “no progression / stable”). Click
-**Run prediction**. Use the counterfactual panel to test flips such as
-MGMT, extent of resection, or a milder MRI report. In smoke-test mode
-this uses the transparent demo engine; turn on live LLM scoring only
+**Run prediction**. In smoke-test mode this uses the transparent demo
+engine; turn on live LLM scoring only
 when the BioMistral 4-bit base and LoRA adapter are present locally.
 
 ## 9. Rebuild second-recurrence summaries
