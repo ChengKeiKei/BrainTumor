@@ -8,11 +8,6 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from src.counterfactual import (
-    first_recurrence_scenarios,
-    run_counterfactuals,
-    second_recurrence_scenarios,
-)
 from src.fields import (
     FIRST_RECURRENCE_FIELDS,
     FIRST_RECURRENCE_GUIDE,
@@ -42,9 +37,7 @@ from src.second_inference import predict_second
 from src.ui_components import (
     apply_page_style,
     guide_box,
-    render_counterfactual_table,
     render_fields,
-    render_interactive_counterfactual,
     render_prediction,
     render_required_progress,
     validate_required_inputs,
@@ -250,16 +243,6 @@ def render_first_recurrence_tab() -> None:
                 return
             status.update(label="Hybrid prediction complete", state="complete")
 
-        def _fr_predict(candidate: dict) -> float:
-            return predict_first_hybrid(candidate, docs, use_real_llm=False, embedder=None).probability
-
-        cf = run_counterfactuals(
-            data,
-            first_recurrence_scenarios(data),
-            _fr_predict,
-            baseline_prob=hybrid.probability,
-            threshold=hybrid.threshold,
-        )
         st.session_state["fr_result"] = {
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "data": data,
@@ -274,7 +257,6 @@ def render_first_recurrence_tab() -> None:
             "model_name": hybrid.model_name,
             "evidence_prompt": hybrid.evidence_prompt,
             "contrib": hybrid.top_contributions.to_dict(orient="records"),
-            "cf": cf.to_dict(orient="records"),
         }
 
     result = st.session_state.get("fr_result")
@@ -282,9 +264,6 @@ def render_first_recurrence_tab() -> None:
         return
 
     docs = [LiteratureDoc(*row) for row in result["docs"]]
-
-    def _fr_predict(candidate: dict) -> float:
-        return predict_first_hybrid(candidate, docs, use_real_llm=False, embedder=None).probability
 
     if result.get("live_warning"):
         st.warning(result["live_warning"])
@@ -313,8 +292,7 @@ def render_first_recurrence_tab() -> None:
     )
     st.caption(
         "This percentage is the model's raw score, **not a clinically calibrated probability**. "
-        "Use it to compare and rank patients or what-if scenarios (see the counterfactual analysis below), "
-        "not as the absolute chance of recurrence."
+        "Use it to compare and rank patients, not as the absolute chance of recurrence."
     )
 
     st.markdown("#### XAI: SHAP-style feature contributions")
@@ -323,22 +301,11 @@ def render_first_recurrence_tab() -> None:
         "(via `pred_contribs`), not a separate 'SHAP feature set'. "
         "Positive/green bars push toward recurrence-positive; negative/red bars push downward. "
         "They explain this patient locally and are not causal effects. "
-        "Exp3 hybrid does not include molecular columns, so IDH/MGMT counterfactuals should show ~0 swing in smoke-test mode."
+        "The Exp3 hybrid does not include molecular columns, so molecular inputs are recorded but do not move the score."
     )
     contrib = pd.DataFrame(result["contrib"])
     render_xai_contribution_chart(contrib)
     st.dataframe(contrib, use_container_width=True, hide_index=True)
-
-    cf = pd.DataFrame(result["cf"])
-    render_counterfactual_table(cf, title="XAI: Counterfactual what-if analysis")
-    render_interactive_counterfactual(
-        namespace="fr",
-        baseline_data=result["data"],
-        baseline_prob=result["probability"],
-        threshold=result["threshold"],
-        predict_fn=_fr_predict,
-        mode="first",
-    )
 
     st.markdown("#### Retrieved literature used by the RAG stage")
     st.dataframe(docs_to_frame(docs), use_container_width=True, hide_index=True)
@@ -346,12 +313,7 @@ def render_first_recurrence_tab() -> None:
         st.code(result["evidence_prompt"], language="text")
     st.download_button(
         "Download case payload",
-        data=export_payload(
-            "First Recurrence",
-            result["data"],
-            result["probability"],
-            extra={"counterfactuals": result["cf"]},
-        ),
+        data=export_payload("First Recurrence", result["data"], result["probability"]),
         file_name=f"first_recurrence_payload_{result['data'].get('patient_id') or 'patient'}.json",
         mime="application/json",
         key="download_fr",
@@ -409,7 +371,7 @@ def _render_second_imaging_section(data: dict) -> str:
         "MRI / RadFM report text before second-recurrence prediction *",
         key="sr_mri_report",
         height=140,
-        help="Editable caption used by the scorer and counterfactuals.",
+        help="Editable caption used by the scorer.",
     )
     return mri_report
 
@@ -445,7 +407,7 @@ def render_second_recurrence_tab() -> None:
                 f"Use live {SR_ENCODER_DISPLAY} LoRA",
                 value=False,
                 key="sr_real_llm",
-                help="Off by default. Turn on only after the local 4-bit BioMistral weights and shared-adapter checkpoint are available. Counterfactuals will also call this scorer and are slow.",
+                help="Off by default. Turn on only after the local 4-bit BioMistral weights and shared-adapter checkpoint are available.",
             )
         st.caption(
             f"Training used {SR_RERANKER_DISPLAY} to rank PubMed evidence. This demo retrieves from the local "
@@ -512,22 +474,6 @@ def render_second_recurrence_tab() -> None:
                 return
             status.update(label="Second Recurrence scoring complete", state="complete")
 
-        def _sr_predict(candidate: dict) -> float:
-            return predict_second(
-                candidate,
-                required_labels,
-                docs,
-                use_real_llm=use_real_sr,
-                lora=lora,
-            ).probability
-
-        cf = run_counterfactuals(
-            data,
-            second_recurrence_scenarios(data),
-            _sr_predict,
-            baseline_prob=prediction.probability,
-            threshold=0.5,
-        )
         st.session_state["sr_result"] = {
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "data": data,
@@ -546,7 +492,6 @@ def render_second_recurrence_tab() -> None:
             "model_name": prediction.model_name,
             "warning": prediction.warning,
             "checkpoint_paths": prediction.checkpoint_paths,
-            "cf": cf.to_dict(orient="records"),
         }
 
     result = st.session_state.get("sr_result")
@@ -576,30 +521,10 @@ def render_second_recurrence_tab() -> None:
     )
     render_prediction(prediction, show_rule_xai=False)
 
-    def _sr_predict(candidate: dict) -> float:
-        return predict_second(
-            candidate,
-            result["required_labels"],
-            docs,
-            use_real_llm=bool(result.get("use_real_llm")),
-            lora=get_cached_sr_lora() if result.get("use_real_llm") else None,
-        ).probability
-
-    cf = pd.DataFrame(result["cf"])
-    render_counterfactual_table(cf, title="XAI: Counterfactual what-if analysis (only)")
-    render_interactive_counterfactual(
-        namespace="sr",
-        baseline_data=result["data"],
-        baseline_prob=result["probability"],
-        threshold=0.5,
-        predict_fn=_sr_predict,
-        mode="second",
-    )
-
     st.markdown("#### Retrieved literature context")
     st.caption(
         "Literature is shown for RAG context. Training used PubMedBERT as the reranker; this demo "
-        "uses local TF-IDF. XAI is counterfactual-only (no SHAP), matching the LoRA-first path."
+        "uses local TF-IDF."
     )
     st.dataframe(docs_to_frame(docs), use_container_width=True, hide_index=True)
     st.download_button(
@@ -608,10 +533,7 @@ def render_second_recurrence_tab() -> None:
             "Second Recurrence",
             result["data"],
             result["probability"],
-            extra={
-                "counterfactuals": result["cf"],
-                "caption_meta": st.session_state.get("sr_caption_result"),
-            },
+            extra={"caption_meta": st.session_state.get("sr_caption_result")},
         ),
         file_name=f"second_recurrence_payload_{result['data'].get('patient_id') or 'patient'}.json",
         mime="application/json",
@@ -650,8 +572,8 @@ def main() -> None:
                **Second Recurrence** (already recurred once).
             2. Fill in the patient details. Enter **calendar dates**; days are calculated for you.
             3. Answer *Unknown* when a result is genuinely unavailable — the model handles missing data.
-            4. Click **Predict**, then review the risk card, the feature contributions,
-               and the what-if analysis below it.
+            4. Click **Predict**, then review the risk card and (for First Recurrence)
+               the feature-contribution chart below it.
             """
         )
         st.divider()
@@ -662,7 +584,7 @@ def main() -> None:
         st.caption(
             f"Models — FR: {FR_ENCODER_DISPLAY} + Exp3 + {FR_RERANKER_DISPLAY} hybrid XGBoost. "
             f"SR: {SR_ENCODER_DISPLAY} + {SR_RERANKER_DISPLAY} LoRA. "
-            "FR explains with SHAP-style contributions + counterfactuals; SR uses counterfactuals only."
+            "FR explains with SHAP-style feature contributions."
         )
 
     tab_first, tab_second = st.tabs(["First Recurrence", "Second Recurrence"])

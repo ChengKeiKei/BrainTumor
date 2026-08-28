@@ -104,14 +104,14 @@ def render_prediction(prediction: Prediction, *, show_rule_xai: bool = False) ->
             <span class="label-pill">{prediction.mode or "Current connected model"}</span>
             <h3 style="margin-top:0;">{prediction.risk_level}</h3>
             <p style="font-size:2rem; font-weight:700; margin:0.2rem 0;">{probability_pct:.1f}%</p>
-            <p class="small-muted">{prediction.model_name or "Second Recurrence XAI uses counterfactuals only (no SHAP), matching the LoRA-first deployment path."}</p>
+            <p class="small-muted">{prediction.model_name or "Second Recurrence scoring follows the LoRA-first deployment path."}</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
     st.caption(
         "This percentage is the model's raw score, **not a clinically calibrated probability**. "
-        "Use it to compare and rank patients or what-if scenarios, not as the absolute chance of recurrence."
+        "Use it to compare and rank patients, not as the absolute chance of recurrence."
     )
     if prediction.warning:
         st.warning(prediction.warning)
