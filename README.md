@@ -17,17 +17,6 @@ Notes for visitors:
   and wait about a minute.
 - Research demo only; not for clinical decision-making.
 
-This is the clean, code-only handoff for the glioma recurrence research
-pipeline. The original `First_Recur` and `Second_Recur` folders were audited;
-the requested `Final(v2)` folder was also checked and contained no files.
-Original folders were left unchanged. Useful source code was copied here and
-its paths were made relative to this submission.
-
-No patient dataset, MRI, retrieval index, generated prompt, prediction,
-CSV result, log, cache, or graph is included. As the one exception to the
-code-only rule, the best-performing model checkpoints are shipped with this
-handoff (see "Included best-model checkpoints" below).
-
 ## Included best-model checkpoints
 
 - **First Recurrence (deployed UI model): BioMistral + Exp3 + MedCPT hybrid.**
