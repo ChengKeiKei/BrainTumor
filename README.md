@@ -1,4 +1,4 @@
-# BrainTumor — FYP code handoff (24083155)
+# BrainTumor — FYP
 
 This is the clean, code-only handoff for the glioma recurrence research
 pipeline. The original `First_Recur` and `Second_Recur` folders were audited;
