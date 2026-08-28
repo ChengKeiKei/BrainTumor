@@ -27,8 +27,10 @@ from src.model_config import (
     FR_ENCODER_DISPLAY,
     FR_INTERNAL_TEST,
     FR_RERANKER_DISPLAY,
+    SR_ADAPTER_DIR,
     SR_ENCODER_DISPLAY,
     SR_FIVEFOLD_METRICS,
+    SR_MODEL_ID,
     SR_RERANKER_DISPLAY,
 )
 from src.risk_engine import (
@@ -345,6 +347,13 @@ def render_second_recurrence_tab() -> None:
         "Prediction point: after first recurrence/progression, before possible second recurrence/further progression. "
         "Only enter pre-second-event salvage treatment and imaging evidence."
     )
+    if not (Path(SR_MODEL_ID).exists() and SR_ADAPTER_DIR.exists()):
+        st.warning(
+            "**Demo mode.** The trained Second Recurrence model (BioMistral-7B LoRA, "
+            "five-fold AUROC 0.720) is too large for this free server, so this tab uses a "
+            "rule-based scorer to demonstrate the full workflow, inputs, and explainability. "
+            "Run the app locally with the model weights to get real LoRA predictions."
+        )
     guide_box("Input checklist for accurate Second Recurrence prediction", SECOND_RECURRENCE_GUIDE)
 
     with st.expander("Advanced: model and literature settings", expanded=False):

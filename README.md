@@ -1,5 +1,22 @@
 # BrainTumor — FYP
 
+## Live demo
+
+Try the hosted Streamlit demo (no install needed):
+
+**https://braintumor-demo.streamlit.app**
+
+Notes for visitors:
+
+- The First Recurrence tab runs the real trained hybrid XGBoost artifact
+  (BioMistral last-token embeddings + PCA + XGBoost, internal MU test
+  AUROC 0.978). The Second Recurrence tab runs in demo mode on the free
+  server — the BioMistral-7B LoRA cannot fit in the free tier's memory, so
+  it shows the full workflow and explainability with a rule-based scorer.
+- If the app has been idle it may show "get this app back up" — click it
+  and wait about a minute.
+- Research demo only; not for clinical decision-making.
+
 This is the clean, code-only handoff for the glioma recurrence research
 pipeline. The original `First_Recur` and `Second_Recur` folders were audited;
 the requested `Final(v2)` folder was also checked and contained no files.

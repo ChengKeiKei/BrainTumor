@@ -2,6 +2,15 @@
 
 Doctor-facing Streamlit demo for the first/second recurrence workflows.
 
+## Live demo
+
+Hosted on Streamlit Community Cloud: **https://braintumor-demo.streamlit.app**
+
+The hosted copy runs the real First Recurrence hybrid XGBoost artifact; the
+Second Recurrence tab runs in demo (smoke) mode because the 7B LoRA does not
+fit in the free tier. Run locally with live LLM scoring enabled to use the
+real LoRA (Apple Silicon + MLX required).
+
 ## Location
 
 This UI now lives under the handoff tree:
